@@ -1,13 +1,16 @@
 package llustmarket.artmarket.web.mapper.payment;
 
-import llustmarket.artmarket.web.dto.payment.KakaoApproveResponse;
-import llustmarket.artmarket.web.dto.payment.KakaoCancelResponse;
+import llustmarket.artmarket.web.dto.payment.PaymentDTO;
+import llustmarket.artmarket.web.dto.payment.RefundDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface PaymentMapper {
-    void insertPayment(KakaoApproveResponse approveResponse);
 
-    void insertRefund(KakaoCancelResponse cancelResponse);
+    void insertPayment(PaymentDTO paymentDTO);
+
+    PaymentDTO selectPayment(String tid);
+
+    PaymentDTO selectPayCancel(RefundDTO refundDTO);
 
 }

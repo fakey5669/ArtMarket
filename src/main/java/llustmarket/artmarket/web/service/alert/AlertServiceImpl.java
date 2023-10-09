@@ -39,23 +39,26 @@ public class AlertServiceImpl implements AlertService {
 
     @Transactional
     @Override
-    public void registerAlert(long memberId,long alertPath, AlertType alertType) {
+    public void registerAlert(long memberId, long alertPath, AlertType alertType) {
         log.info("# 알림 전송");
         //현제 회원 정보
         MemberDTO member = null;
         // 상대 회원 Id
         long authorMemberId = 0;
 
-        switch (alertType){
-            case MESSAGE : {
+        switch (alertType) {
+            case MESSAGE: {
                 // 현제 회원 구하기
                 member = memberService.selectOne(memberId);
                 // 상대 회원 아이디
                 ChatRoomDTO chatRoomDTO = chatRoomService.searchChatRoomId(alertPath);
                 authorMemberId = chatRoomDTO.getChatFromId();
-                if(memberId == authorMemberId) authorMemberId = chatRoomDTO.getChatToId();
+                if (memberId == authorMemberId) authorMemberId = chatRoomDTO.getChatToId();
             }
-            default  : {
+            case CANCEL: {
+
+            }
+            default: {
                 // 주문상품
 
             }
@@ -126,17 +129,17 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public AlertDTO searchOnePath(long pathId,AlertType alertType) {
+    public AlertDTO searchOnePath(long pathId, AlertType alertType) {
         log.info("동일한 메시지 찾아서 가져오기");
         Alert vo = Alert.builder().alertPath(pathId).alertType(String.valueOf(alertType)).build();
         Alert alerts = null;
         try {
             alerts = alertMapper.selectOnePathId(vo);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-        if(alerts != null)  return modelMapper.map(alerts,AlertDTO.class);
+        if (alerts != null) return modelMapper.map(alerts, AlertDTO.class);
         return null;
     }
 

@@ -8,26 +8,26 @@
         tid, partner_order_id, partner_user_id
         )
         VALUES(
-        #{tid}, #{partner_order_id}, #{partner_user_id}
+        #{tid}, #{partnerOrderId}, #{partnerUserId}
         )
     </insert>
 
-    <!-- <insert id="insertRefund" useGeneratedKeys="true" keyProperty="partner_order_id"
-             parameterType="llustmarket.artmarket.domain.payment.Payment">
-         INSERT INTO
-         refund(
-         tid, partner_order_id, partner_user_id, amount
-         )
-         VALUES(
-         #{tid}, #{partner_order_id}, #{partner_user_id}, #{amount}
-         )
-     </insert>-->
+    <select id="selectPayment" resultType="llustmarket.artmarket.web.dto.payment.PaymentDTO">
+        select s.tid, s.partner_order_id, s.partner_user_id, o.total_amount
+        from safepayment s
+        INNER JOIN art_market_db.order o
+        ON o.order_id = s.partner_order_id
+        where tid = #{tid};
+    </select>
 
-    <!-- <select id="selectPayment" resultType="llustmarket.artmarket.domain.payment.Payment">
-         SELECT *
-         FROM safepayment
-         where tid = #{tid}
-     </select>-->
+    <select id="selectPayCancel" parameterType="llustmarket.artmarket.web.dto.payment.RefundDTO"
+            resultType="llustmarket.artmarket.web.dto.payment.PaymentDTO">
+        select s.tid, s.partner_order_id, s.partner_user_id, o.total_amount
+        from safepayment s
+        INNER JOIN art_market_db.order o
+        ON o.order_id = s.partner_order_id
+        where o.order_id = #{orderId}
+    </select>
 
 
 </mapper>

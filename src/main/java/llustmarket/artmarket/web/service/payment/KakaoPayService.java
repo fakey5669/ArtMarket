@@ -1,8 +1,8 @@
 package llustmarket.artmarket.web.service.payment;
 
-import llustmarket.artmarket.web.dto.payment.KakaoApproveResponse;
-import llustmarket.artmarket.web.dto.payment.KakaoCancelResponse;
-import llustmarket.artmarket.web.dto.payment.KakaoReadyResponse;
+import llustmarket.artmarket.web.dto.order.OrderPayDTO;
+import llustmarket.artmarket.web.dto.payment.*;
+import llustmarket.artmarket.web.mapper.order.OrderMapper;
 import llustmarket.artmarket.web.mapper.payment.PaymentMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,12 +14,16 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor
 @Transactional
 public class KakaoPayService {
 
+    private final OrderMapper orderMapper; // 저장할 db
     private final PaymentMapper paymentMapper; // 저장할 db
     static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
     static final String admin_Key = "800714ee8a4c1870bacddb473506cd71"; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
@@ -37,20 +41,21 @@ public class KakaoPayService {
         return httpHeaders;
     }
 
-    public KakaoReadyResponse kakaoPayReady() {
+    public KakaoReadyResponse kakaoPayReady(OrderPayDTO orderPayDTO) {
         // 카카오페이 요청 양식
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         //MultiValueMap 키의 중복 허용 가능
         parameters.add("cid", cid); //가맹점 코드(test는 카카오에서 제공하는 샘플 코드)
-        parameters.add("partner_order_id", "1695626868110350"); //주문번호
-        parameters.add("partner_user_id", "이승민"); //주문자명
-        parameters.add("item_name", "article"); //물품 이름
-        parameters.add("quantity", "1"); //수량
-        parameters.add("total_amount", 15000); //결제금액
+        parameters.add("partner_order_id", orderPayDTO.getOrderId()); //주문번호
+        parameters.add("partner_user_id", orderPayDTO.getNickname()); //주문자명
+        parameters.add("item_name", orderPayDTO.getProductName()); //물품 이름
+        parameters.add("quantity", 1); //수량
+        parameters.add("total_amount", orderPayDTO.getTotalAmount()); //결제금액
         parameters.add("tax_free_amount", 0); //비과세
+
         parameters.add("approval_url", "http://localhost:8070/success-order"); // 성공 시 redirect url
-        parameters.add("cancel_url", "http://localhost:8070/product/:product_id"); // 취소 시 redirect url
-        parameters.add("fail_url", "http://localhost:8070/product/:product_id"); // 실패 시 redirect url
+        parameters.add("cancel_url", "http://localhost:8070/product/{product_id}"); // 취소 시 redirect url
+        parameters.add("fail_url", "http://localhost:8070/product/{product_id}"); // 실패 시 redirect url
 
         // 파라미터, http 헤더
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
@@ -66,17 +71,19 @@ public class KakaoPayService {
         return kakaoReady;
     }
 
-    /*
-      결제 완료 승인
-     */
-    public KakaoApproveResponse ApproveResponse(String pgToken) {
 
+    // 결제 완료 승
+    public KakaoApproveResponse ApproveResponse(String pgToken, HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        String tid = (String) session.getAttribute("kakaoPaySession");
+        PaymentDTO paymentDTO = paymentMapper.selectPayment(tid);
         // 카카오 요청
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", cid);
-        parameters.add("tid", kakaoReady.getTid());
-        parameters.add("partner_order_id", "1695626868110350"); //주문번호
-        parameters.add("partner_user_id", "이승민"); //주문자명
+        parameters.add("tid", tid);
+        parameters.add("partner_order_id", paymentDTO.getPartnerOrderId()); //주문번호
+        parameters.add("partner_user_id", paymentDTO.getPartnerUserId()); //주문자명
         parameters.add("pg_token", pgToken);
 
         // 파라미터, 헤더
@@ -90,22 +97,24 @@ public class KakaoPayService {
                 requestEntity,
                 KakaoApproveResponse.class);
 
-        paymentMapper.insertPayment(approveResponse); //db에 저장
+        OrderPayDTO orderPayDTO = new OrderPayDTO();
+        orderPayDTO.setOrderId(paymentDTO.getPartnerOrderId());
+        orderPayDTO.setOrderStatus("결제완료");
+        orderMapper.updateOrderStatus(orderPayDTO);
 
         return approveResponse;
     }
 
-    /*
-      결제 환불
-     */
-    public KakaoCancelResponse kakaoCancel() {
 
+    //결제 환불
+    public KakaoCancelResponse kakaoCancel(RefundDTO refundDTO) {
 
+        PaymentDTO pay = paymentMapper.selectPayCancel(refundDTO);
         // 카카오페이 요청
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", cid);
-        parameters.add("tid", kakaoReady.getTid()); //tid 번호
-        parameters.add("cancel_amount", 15000);  //환불 금액
+        parameters.add("tid", pay.getTid()); //tid 번호
+        parameters.add("cancel_amount", pay.getTotalAmount());  //환불 금액
         parameters.add("cancel_tax_free_amount", 0); //비과세
 
         // 파라미터, 헤더
@@ -118,9 +127,14 @@ public class KakaoPayService {
                 "https://kapi.kakao.com/v1/payment/cancel",
                 requestEntity,
                 KakaoCancelResponse.class);
-        //paymentMapper.insertRefund(cancelResponse);
+
+        OrderPayDTO orderPayDTO = new OrderPayDTO();
+        orderPayDTO.setOrderId(pay.getPartnerOrderId());
+        orderPayDTO.setOrderStatus("환불 완료");
+        orderMapper.updateOrderStatus(orderPayDTO);
 
         return cancelResponse;
+
+
     }
-    //비과세 금액 = 총 결제 금액 * 1.1
 }

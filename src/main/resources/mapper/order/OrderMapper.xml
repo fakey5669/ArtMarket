@@ -17,7 +17,7 @@
     </select>
 
     <insert id="insertOrder" useGeneratedKeys="true" keyProperty="order_id"
-            parameterType="llustmarket.artmarket.domain.order.Order">
+            parameterType="llustmarket.artmarket.web.dto.order.OrderPayDTO">
         INSERT INTO
         art_market_db.order(
         order_id, product_id, member_id, product_name, total_amount, order_date, deadline, order_status
@@ -27,8 +27,8 @@
         )
     </insert>
 
-    <!--판매자에게 보이는 시점-->
-    <select id="selectAuthor" resultType="llustmarket.artmarket.web.dto.order.OrderNameDTO">
+    <!--판매자 주문관리-->
+    <select id="selectAuthor" resultType="llustmarket.artmarket.web.dto.order.OrderPayDTO">
         SELECT o.order_id,
         m.member_id,
         m.nickname,
@@ -39,11 +39,43 @@
         FROM art_market_db.order o
         INNER JOIN member m
         ON m.member_id = o.member_id
-        where o.member_id = #{memberId}
+        where o.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
+    </select>
+    <!--판매자의 검색 기능 -->
+    <select id="orderSearchAuthor" parameterType="llustmarket.artmarket.web.dto.order.SearchOrderDTO"
+            resultType="llustmarket.artmarket.web.dto.order.SearchOrderDTO">
+        SELECT o.order_id,
+        m.nickname,
+        o.total_amount,
+        o.order_date,
+        o.deadline,
+        o.order_status
+        FROM art_market_db.order o
+        INNER JOIN product p
+        ON p.product_id = o.product_id
+        INNER JOIN member m
+        ON m.member_id = o.member_id
+        where o.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
+        <if test="category !=null and !category.equals('')">
+            and p.category = #{category}
+        </if>
+
+        <if test="orderStatus !=null and !orderStatus.equals('') ">
+            and o.order_status = #{orderStatus}
+        </if>
+
+        <if test="nickname !=null and !nickname.equals('')  ">
+            and m.nickname = #{nickname}
+        </if>
+
+        <if test="startDate !=null and !startDate.equals('') and endDate !=null and !endDate.equals('') ">
+            and o.order_date between #{startDate} and concat(#{endDate}, ' 23:59:59')
+        </if>
+        ORDER BY o.order_date DESC
     </select>
 
-    <!--구매자에게 보이는 시점-->
-    <select id="selectMember" resultType="llustmarket.artmarket.web.dto.order.OrderNameDTO">
+    <!--구매자 주문관리-->
+    <select id="selectMember" resultType="llustmarket.artmarket.web.dto.order.OrderPayDTO">
         SELECT o.order_id,
         m.nickname,
         o.total_amount,
@@ -55,10 +87,43 @@
         ON p.product_id = o.product_id
         INNER JOIN member m
         ON m.member_id = p.member_id
-        where m.member_id = #{memberId}
+        where m.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
     </select>
 
-    <update id="updateOrderStatus" parameterType="llustmarket.artmarket.domain.order.Order">
+    <!--구매자의 검색 기능 -->
+    <select id="orderSearchMember" parameterType="llustmarket.artmarket.web.dto.order.SearchOrderDTO"
+            resultType="llustmarket.artmarket.web.dto.order.SearchOrderDTO">
+        SELECT o.order_id,
+        m.nickname,
+        o.total_amount,
+        o.order_date,
+        o.deadline,
+        o.order_status
+        FROM art_market_db.order o
+        INNER JOIN product p
+        ON p.product_id = o.product_id
+        INNER JOIN member m
+        ON m.member_id = p.member_id
+        where m.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
+        <if test="category !=null and !category.equals('')">
+            and p.category = #{category}
+        </if>
+
+        <if test="orderStatus !=null and !orderStatus.equals('') ">
+            and o.order_status = #{orderStatus}
+        </if>
+
+        <if test="nickname !=null and !nickname.equals('')  ">
+            and m.nickname = #{nickname}
+        </if>
+
+        <if test="startDate !=null and !startDate.equals('') and endDate !=null and !endDate.equals('') ">
+            and o.order_date between #{startDate} and concat(#{endDate}, ' 23:59:59')
+        </if>
+        ORDER BY o.order_date DESC
+    </select>
+
+    <update id="updateOrderStatus" parameterType="llustmarket.artmarket.web.dto.order.OrderPayDTO">
         UPDATE art_market_db.order
         SET order_status = #{orderStatus}
         where order_id = #{orderId}

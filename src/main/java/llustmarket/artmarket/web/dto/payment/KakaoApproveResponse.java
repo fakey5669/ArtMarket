@@ -4,9 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * 결제 승인 요청 시 사용
- */
+//결제 승인 요청 시 사용
+
 @Getter
 @Setter
 @ToString

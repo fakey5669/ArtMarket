@@ -3,6 +3,8 @@ package llustmarket.artmarket.web.mapper.order;
 import llustmarket.artmarket.domain.order.Order;
 import llustmarket.artmarket.web.dto.board.AuthorDTO;
 import llustmarket.artmarket.web.dto.member.MemberDTO;
+import llustmarket.artmarket.web.dto.order.OrderPayDTO;
+import llustmarket.artmarket.web.dto.order.SearchOrderDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -19,13 +21,16 @@ public interface OrderMapper {
 
     String selectOrderId();
 
-    void insertOrder(Order order);
+    void insertOrder(OrderPayDTO orderPayDTO);
 
     List<AuthorDTO> selectAuthor(String memberId);
 
     List<MemberDTO> selectMember(String memberId);
 
-    //List<OrderDTO> getSearch();
+    List<SearchOrderDTO> orderSearchAuthor(SearchOrderDTO searchOrderDTO);
 
-    void updateOrderStatus(Order order);
+    List<SearchOrderDTO> orderSearchMember(SearchOrderDTO searchOrderDTO);
+
+    void updateOrderStatus(OrderPayDTO orderPayDTO);
+
 }

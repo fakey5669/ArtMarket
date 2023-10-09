@@ -6,9 +6,9 @@ import lombok.ToString;
 
 import java.util.Date;
 
-/**
- * 결제 요청 시 카카오에게 받음
- */
+
+//결제 요청 시 카카오에게 받음
+
 @Getter
 @Setter
 @ToString

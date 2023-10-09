@@ -4,9 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * 총 금액
- */
+
+// 총 금액
+
 @Getter
 @Setter
 @ToString
