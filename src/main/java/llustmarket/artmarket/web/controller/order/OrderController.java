@@ -25,14 +25,13 @@ public class OrderController {
      * @param orderPayDTO 주문 정보
      * @return KakaoReadyResponse
      */
-    @PostMapping("/order-ready")
+    @PostMapping("/ready")
     public KakaoReadyResponse orderReady(@RequestBody @Valid OrderPayDTO orderPayDTO, HttpServletRequest request) {
         return orderService.doOrderReady(orderPayDTO, request);
     }
 
 
     //작가 회원
-
     @GetMapping("/mypage-orderAuthor/{member_id}") //멤버아이디 넣어서 시도해야함
     public ResponseEntity getOrderAuthorList(@PathVariable(value = "member_id") String memberId) {
 

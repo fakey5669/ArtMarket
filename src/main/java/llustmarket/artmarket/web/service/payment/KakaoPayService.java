@@ -99,7 +99,7 @@ public class KakaoPayService {
 
         OrderPayDTO orderPayDTO = new OrderPayDTO();
         orderPayDTO.setOrderId(paymentDTO.getPartnerOrderId());
-        orderPayDTO.setOrderStatus("결제완료");
+        orderPayDTO.setOrderStatus("결제 완료");
         orderMapper.updateOrderStatus(orderPayDTO);
 
         return approveResponse;
