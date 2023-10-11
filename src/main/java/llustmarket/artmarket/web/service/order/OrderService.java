@@ -5,6 +5,7 @@ import llustmarket.artmarket.web.dto.board.AuthorDTO;
 import llustmarket.artmarket.web.dto.member.MemberDTO;
 import llustmarket.artmarket.web.dto.order.OrderDTO;
 import llustmarket.artmarket.web.dto.order.OrderPayDTO;
+import llustmarket.artmarket.web.dto.order.OrderStatusDTO;
 import llustmarket.artmarket.web.dto.order.SearchOrderDTO;
 import llustmarket.artmarket.web.dto.payment.KakaoReadyResponse;
 import llustmarket.artmarket.web.dto.payment.PaymentDTO;
@@ -74,11 +75,19 @@ public class OrderService {
     }
 
 
+    //주문 상태 변경
     public void OrderStatus(OrderPayDTO orderPayDTO) {
 
         orderMapper.updateOrderStatus(orderPayDTO);
     }
 
+    public List<OrderStatusDTO> countOrderStatus(OrderStatusDTO orderStatusDTO) {
+
+        List<OrderStatusDTO> count = orderMapper.countOrderStatus(orderStatusDTO);
+        return count;
+    }
+
+    //주문
     public KakaoReadyResponse doOrderReady(OrderPayDTO orderPayDTO, HttpServletRequest request) {
         // step1. 주문 정보 저장
         insertOrder(orderPayDTO);

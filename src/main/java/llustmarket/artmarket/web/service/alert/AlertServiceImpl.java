@@ -55,11 +55,10 @@ public class AlertServiceImpl implements AlertService {
                 authorMemberId = chatRoomDTO.getChatFromId();
                 if (memberId == authorMemberId) authorMemberId = chatRoomDTO.getChatToId();
             }
-            case CANCEL: {
 
-            }
             default: {
                 // 주문상품
+
 
             }
 

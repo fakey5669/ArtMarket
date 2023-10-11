@@ -4,6 +4,7 @@ import llustmarket.artmarket.domain.order.Order;
 import llustmarket.artmarket.web.dto.board.AuthorDTO;
 import llustmarket.artmarket.web.dto.member.MemberDTO;
 import llustmarket.artmarket.web.dto.order.OrderPayDTO;
+import llustmarket.artmarket.web.dto.order.OrderStatusDTO;
 import llustmarket.artmarket.web.dto.order.SearchOrderDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -32,5 +33,7 @@ public interface OrderMapper {
     List<SearchOrderDTO> orderSearchMember(SearchOrderDTO searchOrderDTO);
 
     void updateOrderStatus(OrderPayDTO orderPayDTO);
+
+    List<OrderStatusDTO> countOrderStatus(OrderStatusDTO orderStatusDTO);
 
 }

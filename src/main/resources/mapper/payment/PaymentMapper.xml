@@ -29,5 +29,4 @@
         where o.order_id = #{orderId}
     </select>
 
-
 </mapper>

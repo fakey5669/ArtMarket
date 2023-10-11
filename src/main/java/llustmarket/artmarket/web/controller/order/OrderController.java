@@ -1,6 +1,7 @@
 package llustmarket.artmarket.web.controller.order;
 
 import llustmarket.artmarket.web.dto.order.OrderPayDTO;
+import llustmarket.artmarket.web.dto.order.OrderStatusDTO;
 import llustmarket.artmarket.web.dto.order.SearchOrderDTO;
 import llustmarket.artmarket.web.dto.payment.KakaoReadyResponse;
 import llustmarket.artmarket.web.service.order.OrderService;
@@ -63,6 +64,12 @@ public class OrderController {
     public void changeOrderStatus(@RequestBody OrderPayDTO orderPayDTO) {
 
         orderService.OrderStatus(orderPayDTO);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity getCountOrderStatus(OrderStatusDTO orderStatusDTO) {
+        return new ResponseEntity<>(orderService.countOrderStatus(orderStatusDTO), HttpStatus.OK);
+
     }
 
 }

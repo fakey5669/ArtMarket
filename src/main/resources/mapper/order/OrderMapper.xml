@@ -123,6 +123,13 @@
         ORDER BY o.order_date DESC
     </select>
 
+    <select id="countOrderStatus" parameterType="llustmarket.artmarket.web.dto.order.OrderStatusDTO"
+            resultType="llustmarket.artmarket.web.dto.order.OrderStatusDTO">
+        SELECT order_status, count(order_status) as count
+        FROM art_market_db.order
+        group by order_status
+    </select>
+
     <update id="updateOrderStatus" parameterType="llustmarket.artmarket.web.dto.order.OrderPayDTO">
         UPDATE art_market_db.order
         SET order_status = #{orderStatus}
