@@ -3,20 +3,20 @@
 
 <mapper namespace="llustmarket.artmarket.web.mapper.member.TokenMapper">
     <insert id="insertToken" useGeneratedKeys="true" keyProperty="tokenId">
-        INSERT INTO token (member_id, validation_token, token_limit_date)
+        INSERT INTO art_market_db.token (member_id, validation_token, token_limit_date)
         VALUES (#{memberId}, #{validationToken}, #{tokenLimitDate})
     </insert>
     <update id="invalidateTokens">
-        UPDATE token
+        UPDATE art_market_db.token
         SET token_status = 0
         WHERE member_id = #{memberId}
     </update>
     <update id="invalidateExpiredTokens">
-        UPDATE token
+        UPDATE art_market_db.token
         SET token_status = 0
         WHERE token_limit_date &lt; #{currentDate}
     </update>
     <select id="selectLatestTokenByMemberId" resultType="llustmarket.artmarket.domain.member.Token">
-        SELECT * FROM token WHERE member_id = #{memberId} ORDER BY token_id DESC LIMIT 1
+        SELECT * FROM art_market_db.token WHERE member_id = #{memberId} ORDER BY token_id DESC LIMIT 1
     </select>
 </mapper>

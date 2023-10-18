@@ -5,34 +5,34 @@
 
 <mapper namespace="llustmarket.artmarket.web.mapper.file.FileMapper">
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="fileId">
-        insert into file(file_path, file_type_id, file_origin_name, file_name)
+        insert into art_market_db.file(file_path, file_type_id, file_origin_name, file_name)
         values (#{filePath}, #{fileTypeId}, #{fileOriginName}, #{fileName})
     </insert>
 
     <select id="selectOnePathAndId" resultType="llustmarket.artmarket.domain.file.FileVO">
         select file_id, file_path, file_type_id, file_origin_name, file_name, file_date
-        from file
+        from art_market_db.file
         where file_path = #{filePath}
-          and file_type_id = #{fileTypeId}
+        and file_type_id = #{fileTypeId}
     </select>
 
     <select id="selectOnefileName" resultType="llustmarket.artmarket.domain.file.FileVO">
         select file_id, file_path, file_type_id, file_origin_name, file_name, file_date
-        from file
+        from art_market_db.file
         where file_name = #{fileName}
     </select>
 
     <select id="getFilesByTypeAndId" resultType="llustmarket.artmarket.domain.file.FileVO">
         select file_id, file_path, file_type_id, file_origin_name, file_name, file_date
-        from file
+        from art_market_db.file
         where file_path = #{filePath}
-          and file_type_id = #{fileTypeId}
+        and file_type_id = #{fileTypeId}
     </select>
 
     <delete id="deleteFile">
         delete
-        from file
+        from art_market_db.file
         where file_path = #{filePath}
-          and file_type_id = #{fileTypeId}
+        and file_type_id = #{fileTypeId}
     </delete>
 </mapper>

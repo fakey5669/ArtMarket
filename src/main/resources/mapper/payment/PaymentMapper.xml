@@ -4,7 +4,7 @@
     <insert id="insertPayment" useGeneratedKeys="true" keyProperty="partner_order_id"
             parameterType="llustmarket.artmarket.domain.payment.Payment">
         INSERT INTO
-        safepayment(
+        art_market_db.safepayment(
         tid, partner_order_id, partner_user_id
         )
         VALUES(
@@ -14,7 +14,7 @@
 
     <select id="selectPayment" resultType="llustmarket.artmarket.web.dto.payment.PaymentDTO">
         select s.tid, s.partner_order_id, s.partner_user_id, o.total_amount
-        from safepayment s
+        from art_market_db.safepayment s
         INNER JOIN art_market_db.order o
         ON o.order_id = s.partner_order_id
         where tid = #{tid};
@@ -23,7 +23,7 @@
     <select id="selectPayCancel" parameterType="llustmarket.artmarket.web.dto.payment.RefundDTO"
             resultType="llustmarket.artmarket.web.dto.payment.PaymentDTO">
         select s.tid, s.partner_order_id, s.partner_user_id, o.total_amount
-        from safepayment s
+        from art_market_db.safepayment s
         INNER JOIN art_market_db.order o
         ON o.order_id = s.partner_order_id
         where o.order_id = #{orderId}

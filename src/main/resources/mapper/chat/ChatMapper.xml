@@ -4,31 +4,31 @@
 
 <mapper namespace="llustmarket.artmarket.web.mapper.chat.ChatMapper">
     <insert id="insertOne" useGeneratedKeys="true" keyColumn="chatId">
-        insert into chat (chat_room_id, member_id,chat_identity,product_id,chat_leave_date)
+        insert into art_market_db.chat (chat_room_id, member_id,chat_identity,product_id,chat_leave_date)
         values (#{chatRoomId},#{memberId},#{chatIdentity},#{productId},#{chatLeaveDate})
     </insert>
     <update id="updateChatLastDate" parameterType="llustmarket.artmarket.domain.chat.Chat">
-        update chat set chat_leave_date = #{chatLeaveDate}
-        where chat_room_id =  #{chatRoomId} and member_id = #{memberId}
+        update art_market_db.chat set chat_leave_date = #{chatLeaveDate}
+        where chat_room_id = #{chatRoomId} and member_id = #{memberId}
     </update>
     <update id="updateChatStatus" parameterType="llustmarket.artmarket.domain.chat.Chat">
-        update chat set chat_status = #{chatStatus},
-                        chat_leave_date = #{chatLeaveDate}
-        where chat_room_id =  #{chatRoomId} and member_id = #{memberId}
+        update art_market_db.chat set chat_status = #{chatStatus},
+        chat_leave_date = #{chatLeaveDate}
+        where chat_room_id = #{chatRoomId} and member_id = #{memberId}
     </update>
     <delete id="deleteChat">
-        delete from chat where chat_room_id = #{chatRoomId} and member_id = #{memberId}
+        delete from art_market_db.chat where chat_room_id = #{chatRoomId} and member_id = #{memberId}
     </delete>
-    <select id="selectOneExist" resultType="llustmarket.artmarket.domain.chat.Chat" >
+    <select id="selectOneExist" resultType="llustmarket.artmarket.domain.chat.Chat">
         select chat_id, chat_room_id, member_id, chat_date, chat_leave_date, chat_status, chat_identity, product_id
-        from chat where member_id = #{memberId} and product_id = #{productId}
+        from art_market_db.chat where member_id = #{memberId} and product_id = #{productId}
     </select>
     <select id="selectByRoomId" resultType="llustmarket.artmarket.domain.chat.Chat">
         select chat_id, chat_room_id, member_id, product_id, chat_date, chat_leave_date, chat_status, chat_identity
-        from chat where chat_room_id = #{chatRoomId}
+        from art_market_db.chat where chat_room_id = #{chatRoomId}
     </select>
-    <select id="selectByRoomIdAndMemberId" resultType="llustmarket.artmarket.domain.chat.Chat" >
+    <select id="selectByRoomIdAndMemberId" resultType="llustmarket.artmarket.domain.chat.Chat">
         select chat_id, chat_room_id, member_id, product_id, chat_date, chat_leave_date, chat_status, chat_identity
-        from chat where member_id = #{memberId} and chat_room_id = #{chatRoomId}
+        from art_market_db.chat where member_id = #{memberId} and chat_room_id = #{chatRoomId}
     </select>
 </mapper>

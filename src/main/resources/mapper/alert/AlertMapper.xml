@@ -4,40 +4,40 @@
 
 <mapper namespace="llustmarket.artmarket.web.mapper.alert.AlertMapper">
     <insert id="insertOne" parameterType="llustmarket.artmarket.domain.alert.Alert">
-        insert into alerts(member_id, alert_writer, alert_identity, alert_type, alert_path)
+        insert into art_market_db.alerts(member_id, alert_writer, alert_identity, alert_type, alert_path)
         values(#{memberId},#{alertWriter},#{alertIdentity},#{alertType},#{alertPath})
     </insert>
     <update id="updateStatus">
-        update alerts
+        update art_market_db.alerts
         set alert_status = true
         where member_id = #{memberId}
     </update>
 
     <update id="updateOneStatus">
-        update alerts
+        update art_market_db.alerts
         set alert_status = true
         where member_id = #{memberId}
-          and alert_type = #{alertType}
-          and alert_path = #{alertPath}
+        and alert_type = #{alertType}
+        and alert_path = #{alertPath}
     </update>
 
     <update id="updateDate" parameterType="llustmarket.artmarket.domain.alert.Alert">
-        update alerts set alert_date = #{alertDate}
+        update art_market_db.alerts set alert_date = #{alertDate}
         where alert_id = #{alertId}
         and alert_status = false
     </update>
-    <select id="selectOne" resultType="llustmarket.artmarket.domain.alert.Alert" >
+    <select id="selectOne" resultType="llustmarket.artmarket.domain.alert.Alert">
         select *
-        from alerts where member_id = #{memberId} and alert_status = false
+        from art_market_db.alerts where member_id = #{memberId} and alert_status = false
         order by alert_date desc;
     </select>
-    <select id="selectOnePathId" resultType="llustmarket.artmarket.domain.alert.Alert" >
+    <select id="selectOnePathId" resultType="llustmarket.artmarket.domain.alert.Alert">
         select *
-        from alerts where alert_path = #{alertPath} and alert_status = false
+        from art_market_db.alerts where alert_path = #{alertPath} and alert_status = false
     </select>
-    <select id="selectTotalNumber" resultType="integer" >
+    <select id="selectTotalNumber" resultType="integer">
         select count(*)
-        from alerts
+        from art_market_db.alerts
         where member_id = #{memberId} and alert_status = false
     </select>
 

@@ -7,7 +7,7 @@
     <select id="searchOneDeadline" resultType="llustmarket.artmarket.domain.order.Order">
         select order_id, product_id, member_id, product_name, order_date, total_amount, quantity, deadline, order_status
         from
-        `order` where product_id = #{productId} and member_id = #{memberId}
+        art_market_db.order where product_id = #{productId} and member_id = #{memberId}
         order by deadline desc
         LIMIT 1
     </select>
@@ -36,9 +36,9 @@
         o.deadline,
         o.order_status
         FROM art_market_db.order o
-        INNER JOIN product p
+        INNER JOIN art_market_db.product p
         ON p.product_id = o.product_id
-        INNER JOIN member m
+        INNER JOIN art_market_db.member m
         ON m.member_id = o.member_id
         where p.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
     </select>
@@ -52,9 +52,9 @@
         o.deadline,
         o.order_status
         FROM art_market_db.order o
-        INNER JOIN product p
+        INNER JOIN art_market_db.product p
         ON p.product_id = o.product_id
-        INNER JOIN member m
+        INNER JOIN art_market_db.member m
         ON m.member_id = o.member_id
         where p.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
         <if test="category !=null and !category.equals('')">
@@ -84,9 +84,9 @@
         o.deadline,
         o.order_status
         FROM art_market_db.order o
-        INNER JOIN product p
+        INNER JOIN art_market_db.product p
         ON p.product_id = o.product_id
-        INNER JOIN member m
+        INNER JOIN art_market_db.member m
         ON m.member_id = p.member_id
         where o.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
     </select>
@@ -101,9 +101,9 @@
         o.deadline,
         o.order_status
         FROM art_market_db.order o
-        INNER JOIN product p
+        INNER JOIN art_market_db.product p
         ON p.product_id = o.product_id
-        INNER JOIN member m
+        INNER JOIN art_market_db.member m
         ON m.member_id = p.member_id
         where o.member_id = #{memberId} and o.order_status &lt;&gt; '결제 대기'
         <if test="category !=null and !category.equals('')">

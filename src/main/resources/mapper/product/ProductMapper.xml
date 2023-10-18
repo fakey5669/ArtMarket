@@ -3,33 +3,33 @@
 
 <mapper namespace="llustmarket.artmarket.web.mapper.product.ProductMapper">
     <insert id="insertProduct" useGeneratedKeys="true" keyProperty="productId">
-        INSERT INTO product (member_id, category, product_title, product_detail)
+        INSERT INTO art_market_db.product (member_id, category, product_title, product_detail)
         VALUES (#{memberId}, #{category}, #{productTitle}, #{productDetail})
     </insert>
     <update id="updateProduct">
-        UPDATE product
+        UPDATE art_market_db.product
         SET category = #{category},
         product_title = #{productTitle},
         product_detail = #{productDetail}
         WHERE product_id = #{productId}
     </update>
     <select id="findProductByProductId" resultType="llustmarket.artmarket.domain.product.Product">
-        select * from product where product_id=#{productId}
+        select * from art_market_db.product where product_id=#{productId}
     </select>
     <select id="findProductByMemberId" resultType="llustmarket.artmarket.domain.product.Product">
-        select * from product where member_id=#{memberId}
+        select * from art_market_db.product where member_id=#{memberId}
     </select>
 
     <delete id="deleteProductById">
-        DELETE FROM product WHERE product_id = #{productId}
+        DELETE FROM art_market_db.product WHERE product_id = #{productId}
     </delete>
     <select id="selectOneByProductId" resultType="llustmarket.artmarket.domain.product.Product">
         select product_id, member_id, category, product_title, product_detail, product_date
-        from product where product_id = #{productId}
+        from art_market_db.product where product_id = #{productId}
     </select>
     <select id="selectLastByMemberId" resultType="llustmarket.artmarket.domain.product.Product">
         SELECT product_id, member_id, category, product_title, product_detail, product_date
-        FROM product
+        FROM art_market_db.product
         WHERE member_id = #{memberId}
         ORDER BY product_date DESC
         LIMIT 1

@@ -3,37 +3,36 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-
 <mapper namespace="llustmarket.artmarket.web.mapper.chat.ChatRoomMapper">
 
     <insert id="insertOne"
-             useGeneratedKeys="true" keyProperty="chatRoomId" keyColumn="chat_room_id">
-        insert into chatroom (product_id, chat_from_id, chat_to_id)
+            useGeneratedKeys="true" keyProperty="chatRoomId" keyColumn="chat_room_id">
+        insert into art_market_db.chatroom (product_id, chat_from_id, chat_to_id)
         values (#{productId},#{chatFromId},#{chatToId})
     </insert>
     <update id="updateOne" parameterType="llustmarket.artmarket.domain.chat.ChatRoom">
-        update chatroom set chat_room_msg = #{chatRoomMsg}
-                          ,chat_room_last_date = #{chatRoomLastDate}
-                        where chat_room_id =  #{chatRoomId}
+        update art_market_db.chatroom set chat_room_msg = #{chatRoomMsg}
+        ,chat_room_last_date = #{chatRoomLastDate}
+        where chat_room_id = #{chatRoomId}
     </update>
     <delete id="deleteChatRoom" parameterType="long">
-        delete from chatroom where chat_room_id = #{chatRoomId}
+        delete from art_market_db.chatroom where chat_room_id = #{chatRoomId}
     </delete>
-    <select id="selectOneId" resultType="llustmarket.artmarket.domain.chat.ChatRoom" >
+    <select id="selectOneId" resultType="llustmarket.artmarket.domain.chat.ChatRoom">
         select chat_room_id, product_id, chat_to_id, chat_from_id, chat_room_date, chat_room_last_date, chat_room_msg
-        from chatroom where chat_room_id = #{chatRoomId};
+        from art_market_db.chatroom where chat_room_id = #{chatRoomId};
     </select>
     <select id="selectListByRoomId"
             resultType="llustmarket.artmarket.domain.chat.ChatRoomList">
         select product_id, chat_to_id, chat_from_id, chat_room_date, chat_room_last_date, chat_room_msg,
-               chatInfo.chat_id as chat_id, chatInfo.chat_room_id as chat_room_id, chatInfo.member_id as member_id,
-               chatInfo.chat_leave_date as chat_leave_date
-        from chatroom join
-             (select chat_id, chat_room_id, member_id, chat_date, chat_leave_date
-              from chat
-              where member_id = #{chatRoomId}
-                and chat_status = 0
-             ) as chatInfo
+        chatInfo.chat_id as chat_id, chatInfo.chat_room_id as chat_room_id, chatInfo.member_id as member_id,
+        chatInfo.chat_leave_date as chat_leave_date
+        from art_market_db.chatroom join
+        (select chat_id, chat_room_id, member_id, chat_date, chat_leave_date
+        from art_market_db.chat
+        where member_id = #{chatRoomId}
+        and chat_status = 0
+        ) as chatInfo
         WHERE chatroom.chat_room_id = chatInfo.chat_room_id
         order by chat_room_last_date desc
     </select>

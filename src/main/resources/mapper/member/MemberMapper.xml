@@ -3,100 +3,100 @@
 
 <mapper namespace="llustmarket.artmarket.web.mapper.member.MemberMapper">
     <insert id="insertMember" useGeneratedKeys="true" keyProperty="memberId">
-        INSERT INTO Member (name, nickname, login_id, password, phone, email, identity)
+        INSERT INTO art_market_db.Member (name, nickname, login_id, password, phone, email, identity)
         VALUES (#{name}, #{nickname}, #{loginId}, #{password}, #{phone}, #{email}, #{identity})
     </insert>
 
     <update id="updateIdentity">
-        UPDATE Member
+        UPDATE art_market_db.Member
         SET identity = 'AUTHOR'
         WHERE member_id = #{memberId}
     </update>
     <update id="updateIntro">
-        UPDATE Member
+        UPDATE art_market_db.Member
         SET member_intro=#{memberIntro}
         WHERE member_id = #{memberId}
     </update>
     <update id="updateAccount">
-        UPDATE Member
+        UPDATE art_market_db.Member
         SET account_bank = #{accountBank}, account=#{account}
         WHERE member_id = #{memberId}
     </update>
     <update id="updatePasswordByMemberId">
-        UPDATE Member
+        UPDATE art_market_db.Member
         SET password = #{password}
         WHERE member_id = #{memberId}
     </update>
     <update id="updatePasswordByEmail">
-        UPDATE Member
+        UPDATE art_market_db.Member
         SET password = #{password}
         WHERE email = #{email}
     </update>
     <update id="updatePhoneByMemberId">
-        UPDATE member
+        UPDATE art_market_db.member
         SET phone = #{newPhone}
         WHERE member_id = #{memberId}
     </update>
     <update id="updateEmailByMemberId">
-        UPDATE member
+        UPDATE art_market_db.member
         SET email = #{newEmail}
         WHERE member_id = #{memberId}
     </update>
     <select id="isLoginIdDuplicate" resultType="int">
         SELECT COUNT(*)
-        FROM Member
+        FROM art_market_db.Member
         WHERE login_id = #{loginId}
     </select>
 
     <select id="isNicknameDuplicate" resultType="int">
         SELECT COUNT(*)
-        FROM Member
+        FROM art_market_db.Member
         WHERE nickname = #{nickname}
     </select>
 
     <select id="isEmailDuplicate" resultType="int">
         SELECT COUNT(*)
-        FROM Member
+        FROM art_market_db.Member
         WHERE email = #{email}
     </select>
 
     <select id="isPhoneDuplicate" resultType="int">
         SELECT COUNT(*)
-        FROM Member
+        FROM art_market_db.Member
         WHERE phone = #{phone}
     </select>
 
     <select id="selectMemberByLoginId" resultType="llustmarket.artmarket.domain.member.Member">
         SELECT *
-        FROM Member
+        FROM art_market_db.Member
         WHERE login_id = #{loginId}
     </select>
 
     <select id="selectMemberByPhone" resultType="llustmarket.artmarket.domain.member.Member">
         SELECT *
-        FROM Member
+        FROM art_market_db.Member
         WHERE phone = #{phone}
     </select>
     <select id="selectMemberByMemberId" resultType="llustmarket.artmarket.domain.member.Member">
         SELECT *
-        FROM Member
+        FROM art_market_db.member
         WHERE member_id = #{memberId}
     </select>
     <select id="findByUserEmail" resultType="llustmarket.artmarket.domain.member.Member">
         SELECT *
-        FROM member
+        FROM art_market_db.member
         WHERE email = #{email}
     </select>
     <select id="findHighestMemberId" resultType="llustmarket.artmarket.domain.member.Member">
         <![CDATA[
     SELECT *
-    FROM member
+    FROM art_market_db.member
     ORDER BY member_id DESC
     LIMIT 1
   ]]>
     </select>
     <update id="autoLogin">
-        update member
+        update art_market_db.member
         set session_id=#{sessionId},
         limit_date=#{limitDate}
         where login_id = #{loginId};
@@ -111,10 +111,10 @@
         email,
         account_bank,
         account, identity, member_intro, member_date, withdrawl
-        from member
+        from art_market_db.member
         where member_id = #{memberId}
     </select>
     <update id="withdrawl">
-        update member set withdrawl=1 where member_id=#{memberId}
+        update art_market_db.member set withdrawl=1 where member_id=#{memberId}
     </update>
 </mapper>

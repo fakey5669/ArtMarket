@@ -5,20 +5,20 @@
 <mapper namespace="llustmarket.artmarket.web.mapper.chat.ChatMessageMapper">
     <insert id="insertOne" parameterType="llustmarket.artmarket.domain.chat.ChatMessage"
             useGeneratedKeys="true" keyProperty="chatMessageId" keyColumn="chat_message_id">
-        insert into chatmessage (chat_room_id, member_id, chat_message_type, message)
+        insert into art_market_db.chatmessage (chat_room_id, member_id, chat_message_type, message)
         values (#{chatRoomId},#{memberId},#{chatMessageType},#{message})
     </insert>
 
     <delete id="deleteChatMessage">
-        delete from chatmessage where chat_message_id = ${chatMessageId}
+        delete from art_market_db.chatmessage where chat_message_id = ${chatMessageId}
     </delete>
 
     <select id="selectOneByMessageId" resultType="llustmarket.artmarket.domain.chat.ChatMessage">
         select chat_message_id, chat_room_id, member_id, chat_message_date, chat_message_type, message
-        from chatmessage where chat_message_id = #{chatMessageId};
+        from art_market_db.chatmessage where chat_message_id = #{chatMessageId};
     </select>
     <select id="selectByRoomId" resultType="llustmarket.artmarket.domain.chat.ChatMessage">
         select chat_message_id, chat_room_id, member_id, chat_message_date, chat_message_type, message
-        from chatmessage where chat_room_id = #{chatRoomId};
+        from art_market_db.chatmessage where chat_room_id = #{chatRoomId};
     </select>
 </mapper>
